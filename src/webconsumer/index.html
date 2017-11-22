@@ -1,0 +1,70 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Identity Server - Web Example</title>
+</head>
+
+<body>
+    <div>
+        <p>Username</p>
+        <input type="text" name="username" />
+        <p>Password</p>
+        <input type="text" name="password" />
+    </div>
+    <br>
+    <button id="login">do that login thang</button>
+    <hr>
+    <span>Result:</span>
+    <pre id="resultpre"></pre>
+    <hr>
+    <p>Hit the API after logging in:</p>
+    <button id="api">Hit the api</button>
+    <hr>
+    <pre id="apipre"></pre>
+    <hr>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        let token = null;
+
+        $(function() {
+
+            $('#login').click(function() {
+                let data = {
+                    username: $('input[name="username"]').val(),
+                    password: $('input[name="password"]').val()
+                };
+                $.ajax({
+                    url: 'http://localhost:3000/login',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    dataType: 'json',
+                    success: function(result) {
+                        $('#resultpre').text(JSON.stringify(result));
+                        token = result.token;
+                    }
+                });
+            });
+
+            $('#api').click(function() {
+                $.ajax({
+                    url: 'http://localhost:3001/',
+                    type: 'post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    beforeSend: function (xhr) {
+                        /* Authorization header */
+                        xhr.setRequestHeader("Authorization", JSON.stringify(token));
+                    },
+                    success: function(result) {
+                        $('#apipre').text(JSON.stringify(result));
+                    }
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
