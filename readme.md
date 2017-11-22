@@ -3,7 +3,7 @@ This is designed to be a very minimal login service.
 
 It is written in nodeJS using typescript and uses mongoDB as the database server.
 
-## *Still in development
+This is still in development. If you want to use this as a part of your security architecture, please read and understand the LICENSE.
 
 ### Installing/Running
  - Download the source, and run npm install.
