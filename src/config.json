@@ -1,0 +1,4 @@
+{
+    "connectionString": "mongodb://localhost/identityserver",
+    "signingCert": "signingCert.ppk"
+}

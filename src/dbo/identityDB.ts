@@ -4,11 +4,11 @@ import { IdentityModel } from "./identityModel";
 export class IdentityDB {
     private model:any;
     private mongoose: any = require('mongoose');
-    private connection: any = require('../db.json');
+    private connection: any = require('../config.json').connectionString;
 
     constructor() {
         this.mongoose.Promise = Promise;
-        this.mongoose.connect(this.connection.connectionString, {useMongoClient: true});
+        this.mongoose.connect(this.connection, {useMongoClient: true});
         this.model = this.mongoose.model('identity', this.getSchema());
     }
 
