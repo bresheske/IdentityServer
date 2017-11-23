@@ -11,6 +11,12 @@ This is still in development. If you want to use this as a part of your security
  - Open config.json and edit the connectionString based on your server location.
  - Generate an RSA Keypair with your favorite generator (like PuttyGEN or OpenSSH) and save the private key somewhere the application can access it.  You need to set that location in config.json under 'signingCert'.
  
+### Architecture
+This identity server is designed to be used in this pattern:
+ - A consumer, like a web app or windows forms application, makes a JSON call to the identity server to log in, and gets a signed token in return.
+ - Any calls the consumer needs to make to an API to perform any data-esk tasks passes the token along with the call.
+ - All calls make to an API will be verified by decrypting the signature in the token to ensure the token was encrypted (and therefore created) by the identity server. The API can then trust the token's integrity. 
+ 
 ### Usage - Logging in and generating a signed token
 A very simple JSON call is all that is required. Hit your server location '/login' with a POST request:
 ```
