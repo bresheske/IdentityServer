@@ -47,6 +47,43 @@ If successful, you will receive this in return:
 
 ### Usage - Verifying signature/integrity of the token (for APIs)
 Just use the public key paired with the private key used to generate the token. Decrypt the signature and verify the data is the same.
+Sample code in the /src/apiconsumer/index.js file shows how to do this:
+
+```
+    // This is the middleware to block/allow requests based on the authorization header.
+    let failuremessage = { result: "false", message: "unauthorized" };
+    let authheader = req.header('Authorization');
+    if (!authheader || typeof authheader == 'undefined') {
+        res.json(failuremessage);
+        return;
+    }
+    try {
+        // first, decrypt it.
+        let authorization = JSON.parse(authheader);
+        if (!authorization) {
+            res.json(failuremessage);
+            return;
+        }
+        let publickey = fs.readFileSync('signingCert.pub');
+        let key = new rsa(publickey, 'public');
+        let dec = JSON.parse(key.decryptPublic(authorization.signature));
+
+        // now just check if the data matches up.
+        if (authorization.identity.created != dec.created) {
+            res.json(failuremessage);
+            return;
+        }
+
+        // we're good and authorized!
+        next();
+    }
+    catch (ex) {
+        console.log(ex);
+        res.json(failuremessage);
+    }
+```
+
+This example uses the NPM package node-rsa to decrypt the signature encrypted by the identity server.  The public key is used to decrypt the message, and the private key is used by the identity server to encrypt it.  This verifies that the token was provided by the identity server.
 
 ### Examples
 The project comes with consumer examples
