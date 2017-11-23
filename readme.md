@@ -11,6 +11,12 @@ This is still in development. If you want to use this as a part of your security
  - Open config.json and edit the connectionString based on your server location.
  - Generate an RSA Keypair with your favorite generator (like PuttyGEN or OpenSSH) and save the private key somewhere the application can access it.  You need to set that location in config.json under 'signingCert'.
  
+#### Generating Tokens
+I used PuttyGen to create the private and public keys found in this repository. **They are _not_ secure**, and should only be used for testing.  If using PuttyGen, you need to:
+ - Generate a private key and use Conversions->Export OpenSSH key.
+ - Use that private key and add it to your config file.
+ - Use command "node ini/exportPublicKey.js". This creates the correct format of key to use in APIs.
+ 
 ### Architecture
 This identity server is designed to be used in this pattern:
  - A consumer, like a web app or windows forms application, makes a JSON call to the identity server to log in, and gets a signed token in return.
