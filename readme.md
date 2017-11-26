@@ -105,5 +105,6 @@ The project comes with consumer examples
  - WebConsumer is in /src/webconsumer.  This logs into the identityserver and passes the token to the APIConsumer.
  - **AngularConsumer** which shows a very basic login screen:
 ![login screen](https://i.imgur.com/F0SX9Kh.png)
+
 And the user's name as part of the claimset when logged in successfully:
-![claim screen](https://i.imgur.com/a/DfRpA.png)
+![claim screen](https://i.imgur.com/0OQpAEx.png)
