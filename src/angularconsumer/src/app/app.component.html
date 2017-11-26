@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row">
+    <div class="col s8 offset-s2">
+      
+      <div *ngIf="!identity" class="card blue-grey lighten-2">
+        <div class="progress">
+            <div *ngIf="loading" class="indeterminate"></div>
+        </div>
+        <div class="card-content white-text">
+          <span class="card-title">Login</span>
+          <div class="input-field">
+            <label class="white-text" for="username">Username</label>
+            <input [disabled]="loading" class="white-text" [(ngModel)]="username" id="username" type="text" />
+          </div>
+          <div class="input-field">
+            <label class="white-text" for="password">Password</label>
+            <input [disabled]="loading" class="white-text" [(ngModel)]="password" id="password" type="password" />
+          </div>
+        </div>
+        <div class="card-action">
+          <button [disabled]="loading" (click)="login()" class="waves-effect waves-light btn blue-grey lighten-4 black-text">Login</button>
+          <div *ngIf="errorMessage" class="card red lighten-5">
+            <div class="card-content red-text darken-4">
+              <p>{{errorMessage}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="identity" class="card blue-grey lighten-2">
+        <div class="card-content white-text">
+          <span class="card-title">Welcome, {{identity.identity.claims[0].value}}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
