@@ -7,18 +7,18 @@ export class TokenGenerator {
     private crypto: any = require('node-rsa');
     private keyfile: string = require('../config.json').signingCert;
     private keytype: string = require('../config.json').signingCertType;
-
-    constructor() {
-
-    }
+    private minutes: number = require('../config.json').validMinutes;
 
     async generateToken(identityModel: IdentityModel) : Promise<TokenSignature> {
         // Create a Token DTO, sign it, encrypt it, do some nasty stuff perhaps.
-
+        let now = new Date();
+        let expires = new Date();
+        expires.setMinutes(now.getMinutes() + this.minutes);
         let token = {
             username: identityModel.username,
             claims: identityModel.claims,
-            created: new Date()
+            created: now,
+            expires: expires
         } as Token;
         
         let file = await fs.readFile(this.keyfile);

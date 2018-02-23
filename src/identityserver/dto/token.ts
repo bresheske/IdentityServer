@@ -4,4 +4,5 @@ export class Token {
     username: string;
     claims: Array<ClaimModel>;
     created: Date;
+    expires: Date;
 }
