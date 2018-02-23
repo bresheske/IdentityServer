@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node ini/dev.js",
+    "test": "node ini/test.js",
     "tsc": "tsc",
     "watch": "tsc -w",
     "init": "node ini/db.js",
@@ -16,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "cash-true": "0.0.2",
     "typescript": "^2.6.1"
   },
   "dependencies": {
@@ -25,6 +27,7 @@
     "express": "^4.16.2",
     "mongoose": "^4.13.1",
     "node-rsa": "^0.4.2",
-    "sha512": "0.0.1"
+    "sha512": "0.0.1",
+    "web-request": "^1.0.7"
   }
 }
