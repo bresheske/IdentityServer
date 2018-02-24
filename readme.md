@@ -37,7 +37,7 @@ With raw JSON data to attempt to login:
 }
 ```
 
-If successful, you will receive this in return:
+If successful, you will receive something like this in return:
 ```
 {
     "result": true,
@@ -62,37 +62,37 @@ Just use the public key paired with the private key used to generate the token. 
 Sample code in the /src/apiconsumer/index.js file shows how to do this:
 
 ```
-    // This is the middleware to block/allow requests based on the authorization header.
-    let failuremessage = { result: "false", message: "unauthorized" };
-    let authheader = req.header('Authorization');
-    if (!authheader || typeof authheader == 'undefined') {
-        res.json(failuremessage);
-        return;
-    }
+public async isValid(token:string): Promise<boolean> {
+
     try {
-        // first, decrypt it.
-        let authorization = JSON.parse(authheader);
-        if (!authorization) {
-            res.json(failuremessage);
-            return;
-        }
-        let publickey = fs.readFileSync('signingCert.pub');
-        let key = new rsa(publickey, 'public');
-        let dec = JSON.parse(key.decryptPublic(authorization.signature));
+        let authtoken = JSON.parse(token);
+        if (!authtoken)
+            return false;
 
-        // now just check if the data matches up.
-        if (authorization.identity.created != dec.created) {
-            res.json(failuremessage);
-            return;
-        }
+        // First decrypt the signature.
+        let pubfile = await fs.readFile(this.keyfile);
+        let publickey = new this.crypto(pubfile, 'public');
+        let dec = publickey.decryptPublic(authtoken.token.signature, 'utf8');
 
-        // we're good and authorized!
-        next();
+        // Now we hash the token and compare it against the signature.
+        let tokenstring = JSON.stringify(authtoken.token.identity);
+        let hash = this.hasher(tokenstring).toString('base64');
+        if (hash !== dec)
+            return false;
+
+        // Now just make sure the token hasn't already expired.
+        let now = new Date();
+        let expires = new Date(authtoken.token.identity.expires);
+        if (now >= expires)
+            return false;
+    
+        return true;
     }
-    catch (ex) {
-        console.log(ex);
-        res.json(failuremessage);
+    catch {
+        return false;
     }
+
+}
 ```
 
 This example uses the NPM package node-rsa to decrypt the signature encrypted by the identity server.  The public key is used to decrypt the message, and the private key is used by the identity server to encrypt it.  This verifies that the token was provided by the identity server.
