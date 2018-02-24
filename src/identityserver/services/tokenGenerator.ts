@@ -25,7 +25,8 @@ export class TokenGenerator {
         let key = new this.crypto(file);
         
         let stringtoken = JSON.stringify(token);
-        let hashedtoken = this.hasher(stringtoken).toString('hex');
+        let hashedtoken = this.hasher(stringtoken).toString('base64');
+        console.log(hashedtoken);
         let encrypted = key.encryptPrivate(hashedtoken, 'base64');
 
         let signature = {

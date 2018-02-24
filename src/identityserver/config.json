@@ -1,5 +1,6 @@
 {
     "connectionString": "mongodb://localhost/identityserver",
     "signingCert": "signingCert.ppk",
+    "signingCertPublic": "signingCert.pub",
     "validMinutes": 20
 }

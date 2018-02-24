@@ -1,7 +1,7 @@
 import * as fs from 'async-file';
 
 export class TokenValidator {
-    private keyfile: string = require('../config.json').signingCert;
+    private keyfile: string = require('../config.json').signingCertPublic;
     private hasher:any = require('sha512');
     private crypto: any = require('node-rsa');
     
@@ -13,25 +13,20 @@ export class TokenValidator {
                 return false;
     
             // First decrypt the signature.
-            let privatekey = await fs.readFile(this.keyfile);
-            let key = new this.crypto(privatekey);
-            let pub = key.exportKey('public');
-            let publickey = new this.crypto(pub, 'public');
-            let dec = publickey.decryptPublic(authtoken.token.signature, 'base64')
-                .toString('hex');
-            
-            // Now we hash the token and compare it against the signature.
-            console.log("COMPUTED TOKEN:::");
-            let tokenstring = JSON.stringify(authtoken.token.identity);
-            console.log(tokenstring);
-            let hash = this.hasher(tokenstring).toString('hex');
+            let pubfile = await fs.readFile(this.keyfile);
+            let publickey = new this.crypto(pubfile, 'public');
 
-            console.log("Decrypted: ");
-            console.log(dec);
-            console.log("Computed Hash: ");
-            console.log(hash);
+            let dec = publickey.decryptPublic(authtoken.token.signature, 'utf8');
+
+            // Now we hash the token and compare it against the signature.
+            let tokenstring = JSON.stringify(authtoken.token.identity);
+            let hash = this.hasher(tokenstring).toString('base64');
+
             if (hash !== dec)
                 return false;
+
+            // Now just make sure the token hasn't already expired.
+            
         
             return true;
         }
