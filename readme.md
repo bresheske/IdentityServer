@@ -30,7 +30,7 @@ http://localhost:3000/login
 ```
 
 With raw JSON data to attempt to login:
-```
+```json
 {
 	"username": "admin",
 	"password": "password"
@@ -38,7 +38,7 @@ With raw JSON data to attempt to login:
 ```
 
 If successful, you will receive something like this in return:
-```
+```json
 {
     "result": true,
     "token": {
@@ -59,9 +59,9 @@ If successful, you will receive something like this in return:
 
 ### Usage - Verifying signature/integrity of the token (for APIs)
 Just use the public key paired with the private key used to generate the token. Decrypt the signature and verify the data is the same.
-Sample code in the /src/apiconsumer/index.js file shows how to do this:
+Sample code in the src/identityserver/services/tokenValidator.ts file shows how to do this:
 
-```
+```typescript
 public async isValid(token:string): Promise<boolean> {
 
     try {
