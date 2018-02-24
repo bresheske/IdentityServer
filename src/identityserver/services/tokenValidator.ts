@@ -26,7 +26,12 @@ export class TokenValidator {
                 return false;
 
             // Now just make sure the token hasn't already expired.
-            
+            let now = new Date();
+            let expires = new Date(authtoken.token.identity.expires);
+            console.log(now);
+            console.log(expires);
+            if (now >= expires)
+                return false;
         
             return true;
         }
