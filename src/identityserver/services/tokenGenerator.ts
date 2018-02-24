@@ -6,8 +6,8 @@ import * as fs from 'async-file';
 export class TokenGenerator {
     private crypto: any = require('node-rsa');
     private keyfile: string = require('../config.json').signingCert;
-    private keytype: string = require('../config.json').signingCertType;
     private minutes: number = require('../config.json').validMinutes;
+    private hasher:any = require('sha512');
 
     async generateToken(identityModel: IdentityModel) : Promise<TokenSignature> {
         // Create a Token DTO, sign it, encrypt it, do some nasty stuff perhaps.
@@ -22,10 +22,11 @@ export class TokenGenerator {
         } as Token;
         
         let file = await fs.readFile(this.keyfile);
-        let key = new this.crypto(file, this.keytype);
+        let key = new this.crypto(file);
         
         let stringtoken = JSON.stringify(token);
-        let encrypted = key.encryptPrivate(stringtoken, 'base64');
+        let hashedtoken = this.hasher(stringtoken).toString('hex');
+        let encrypted = key.encryptPrivate(hashedtoken, 'base64');
 
         let signature = {
             identity: token,
