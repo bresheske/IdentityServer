@@ -8,6 +8,9 @@ export class TokenValidator {
     public async isValid(token:string): Promise<boolean> {
 
         try {
+            if (!token)
+                return false;
+
             let authtoken = JSON.parse(token);
             if (!authtoken)
                 return false;
