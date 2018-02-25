@@ -17,9 +17,7 @@ app.use(function (req:any, res:any, next:any) {
 });
 app.use( async (req:any, res:any, next:any) => {
     let v = new TokenValidator();
-    console.log("AUTH:");
     let auth = req.header('Authorization');
-    console.log(auth);
     if (await v.isValid(auth))
         next();
     else

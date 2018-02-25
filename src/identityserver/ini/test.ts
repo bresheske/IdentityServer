@@ -13,9 +13,10 @@ import { TokenValidator } from '../services/tokenValidator';
     var result = await webrequest.post('http://localhost:3000/login', opts, JSON.stringify(data));
     
     console.log("------ Token Generated ------");
-    console.dir(JSON.parse(result.content));
+    let token = JSON.parse(result.content).token;
+    console.dir(token);
 
     let validator = new TokenValidator();
     console.log("------ Validated Results ------");
-    console.log(await validator.isValid(result.content));
+    console.log(await validator.isValid(JSON.stringify(token)));
 })();

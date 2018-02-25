@@ -18,17 +18,17 @@ export class TokenValidator {
             // First decrypt the signature.
             let pubfile = await fs.readFile(this.keyfile);
             let publickey = new this.crypto(pubfile, 'public');
-            let dec = publickey.decryptPublic(authtoken.token.signature, 'utf8');
+            let dec = publickey.decryptPublic(authtoken.signature, 'utf8');
 
             // Now we hash the token and compare it against the signature.
-            let tokenstring = JSON.stringify(authtoken.token.identity);
+            let tokenstring = JSON.stringify(authtoken.identity);
             let hash = this.hasher(tokenstring).toString('base64');
             if (hash !== dec)
                 return false;
 
             // Now just make sure the token hasn't already expired.
             let now = new Date();
-            let expires = new Date(authtoken.token.identity.expires);
+            let expires = new Date(authtoken.identity.expires);
             if (now >= expires)
                 return false;
         
